@@ -1,0 +1,312 @@
+.agenda-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.agenda-header h1 {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.agenda-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 3px;
+}
+
+.view-toggle button {
+  background: transparent;
+  color: var(--color-text);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1.1rem;
+  font-size: 0.875rem;
+}
+
+.view-toggle button:hover {
+  background: transparent;
+}
+
+.view-toggle button.active {
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+/* Vista Día */
+
+.day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.appointment-row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  transition: opacity 0.3s ease;
+}
+
+.appointment-row.is-past {
+  opacity: 0.6;
+}
+
+.appointment-row.is-past .time-badge,
+.appointment-row.is-past .client-name {
+  text-decoration: line-through;
+  text-decoration-color: currentColor;
+}
+
+.time-badge {
+  width: 64px;
+  flex-shrink: 0;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: var(--color-primary);
+  background: var(--color-primary-subtle);
+  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+}
+
+.client-name {
+  flex: 1;
+  font-size: 0.97rem;
+  font-weight: 500;
+}
+
+.cancel-question {
+  flex: 1;
+  font-size: 0.875rem;
+}
+
+.row-actions {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.edit-date-input {
+  width: 155px;
+  flex-shrink: 0;
+}
+
+.edit-time-input {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  width: 110px;
+  flex-shrink: 0;
+}
+
+.edit-name-input {
+  flex: 1;
+}
+
+/* Vista Semana */
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.week-day-col {
+  position: relative;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 12px;
+  padding-bottom: 34px;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.week-day-header {
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 8px;
+}
+
+.week-day-header.is-today {
+  color: var(--color-primary);
+}
+
+.week-day-name {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.week-day-header.is-today .week-day-name {
+  color: var(--color-primary);
+}
+
+.week-day-num {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.week-appointment {
+  background: var(--color-primary-subtle);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  font-size: 12.5px;
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.week-appointment .time {
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.week-empty {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  padding: 6px 2px;
+}
+
+.day-add-btn {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 14px;
+  line-height: 1;
+}
+
+.day-add-btn:hover {
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Badges de fin de semana / festivo */
+
+.day-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.35rem;
+}
+
+.weekend-badge,
+.holiday-badge {
+  display: inline-block;
+  color: #fff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.12rem 0.4rem;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.weekend-badge {
+  background: #b5762f;
+}
+
+.holiday-badge {
+  background: #4c7a4f;
+}
+
+/* Vista Mes */
+
+.month-grid {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+
+.month-grid-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.month-weekday-label {
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  padding: 4px 0;
+}
+
+.month-grid-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.month-day-cell {
+  position: relative;
+  min-height: 78px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  padding-bottom: 30px;
+  cursor: pointer;
+  background: transparent;
+}
+
+.month-day-cell.is-outside {
+  opacity: 0.4;
+}
+
+.month-day-cell.is-today {
+  background: var(--color-primary-subtle);
+}
+
+.month-day-number {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-text);
+}
+
+.month-day-cell.is-today .month-day-number {
+  color: var(--color-primary);
+}
+
+.month-count {
+  font-size: 11px;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-top: 2px;
+}

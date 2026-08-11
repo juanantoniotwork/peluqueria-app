@@ -1,0 +1,28 @@
+# Dependencias y carpetas de build (SÚPER IMPORTANTE)
+node_modules/
+dist/
+build/
+.next/
+out/
+vendor/
+
+# Archivos de bloqueo de dependencias (suelen tener miles de líneas)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+composer.lock
+
+# Logs y temporales
+*.log
+*.tmp
+*.swp
+.cache/
+
+# Archivos multimedia o pesados que la IA no necesita leer
+*.png
+*.jpeg
+*.jpg
+*.mp4
+*.zip
+*.pdf
+*.csv
