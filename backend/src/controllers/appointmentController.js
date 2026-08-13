@@ -22,10 +22,12 @@ function serialize(appointment) {
 }
 
 async function list(req, res) {
-  const { date, from, to } = req.query;
+  const { date, from, to, search } = req.query;
   const where = { businessId: req.user.businessId };
 
-  if (date) {
+  if (search) {
+    where.clientName = { contains: search, mode: 'insensitive' };
+  } else if (date) {
     if (!DATE_REGEX.test(date)) {
       return res.status(400).json({ error: 'Formato de fecha inválido (YYYY-MM-DD)' });
     }
@@ -39,6 +41,7 @@ async function list(req, res) {
   const appointments = await prisma.appointment.findMany({
     where,
     orderBy: [{ date: 'asc' }, { time: 'asc' }],
+    take: search ? 30 : undefined,
   });
 
   res.json(appointments.map(serialize));

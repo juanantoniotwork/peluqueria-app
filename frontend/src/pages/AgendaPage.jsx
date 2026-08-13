@@ -18,6 +18,7 @@ import {
 } from '../utils/date';
 import { isHoliday } from '../utils/holidays';
 import ConflictConfirm from '../components/ConflictConfirm';
+import AppointmentSearch from '../components/AppointmentSearch';
 import './Agenda.css';
 
 export default function AgendaPage() {
@@ -101,6 +102,7 @@ export default function AgendaPage() {
       <div className="agenda-header">
         <h1>{headerLabel}</h1>
         <div className="agenda-nav">
+          <AppointmentSearch onGoToDay={goToDay} />
           <div className="view-toggle">
             <button
               type="button"

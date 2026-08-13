@@ -45,6 +45,87 @@
   color: var(--color-on-primary);
 }
 
+/* Buscador de citas */
+
+.appt-search {
+  position: relative;
+}
+
+.search-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+}
+
+.search-toggle-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.appt-search-panel {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 8px);
+  width: 280px;
+  max-width: 80vw;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-modal);
+  padding: 0.75rem;
+  z-index: 40;
+}
+
+.appt-search-hint {
+  margin: 0.6rem 0 0;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.appt-search-results {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.appt-search-results button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: 400;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--radius-sm);
+  text-align: left;
+}
+
+.appt-search-results button:hover {
+  background: var(--color-primary-subtle);
+}
+
+.appt-search-name {
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.appt-search-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
 /* Vista Día */
 
 .day-list {
@@ -324,6 +405,20 @@
 
   .agenda-nav > * {
     flex: 1 1 auto;
+  }
+
+  .appt-search {
+    flex: 0 0 auto;
+  }
+
+  .appt-search-panel {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: min(320px, calc(100vw - 32px));
+    max-width: none;
   }
 
   .view-toggle {

@@ -72,3 +72,7 @@ export function formatWeekRangeLabel(date) {
 export function formatDayNumber(date) {
   return format(date, 'd');
 }
+
+export function formatShortDate(date) {
+  return format(date, "d 'de' MMM", { locale: es });
+}
