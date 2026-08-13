@@ -85,3 +85,35 @@
   width: 100%;
   margin: 0 auto;
 }
+
+@media (max-width: 640px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 12px 16px;
+  }
+
+  .topbar-brand {
+    order: 1;
+    font-size: 1.1rem;
+  }
+
+  .topbar-user {
+    order: 2;
+    margin-left: auto;
+    gap: 0.6rem;
+  }
+
+  .topbar-user span {
+    display: none;
+  }
+
+  .topbar-nav {
+    order: 3;
+    flex: 1 1 100%;
+  }
+
+  .content {
+    padding: 18px 16px 40px;
+  }
+}
