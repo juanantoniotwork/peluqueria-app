@@ -4,6 +4,7 @@ const cors = require('cors');
 const authMiddleware = require('./middleware/auth');
 const authRoutes = require('./routes/auth');
 const appointmentRoutes = require('./routes/appointments');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.get('/health', (req, res) => res.json({ ok: true }));
 
 app.use('/auth', authRoutes);
 app.use('/appointments', authMiddleware, appointmentRoutes);
+app.use('/admin', authMiddleware, adminRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });

@@ -9,7 +9,8 @@
     "start": "node src/index.js",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "prisma:studio": "prisma studio"
+    "prisma:studio": "prisma studio",
+    "cuentas": "node scripts/listar-cuentas.js"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",

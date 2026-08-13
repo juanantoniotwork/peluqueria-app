@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AgendaPage from './pages/AgendaPage';
+import AdminPage from './pages/AdminPage';
 
 export default function App() {
   return (
@@ -19,6 +20,9 @@ export default function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
                 <Route path="/agenda" element={<AgendaPage />} />
+                {/* Ruta de administración: no aparece enlazada en la navegación.
+                    La autorización real la hace el backend (403 si no es admin). */}
+                <Route path="/admin" element={<AdminPage />} />
                 <Route path="/" element={<Navigate to="/agenda" replace />} />
               </Route>
             </Route>
