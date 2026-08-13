@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as appointmentsApi from '../api/appointments';
-import { toISODate } from '../utils/date';
+import { isPastAppointment, toISODate } from '../utils/date';
 import ConflictConfirm from './ConflictConfirm';
 
 export default function AppointmentModal({ defaultDate, editableDate, onClose, onSaved }) {
@@ -10,6 +10,7 @@ export default function AppointmentModal({ defaultDate, editableDate, onClose, o
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [showConflict, setShowConflict] = useState(false);
+  const [showPastWarning, setShowPastWarning] = useState(false);
 
   async function create() {
     setSaving(true);
@@ -27,11 +28,7 @@ export default function AppointmentModal({ defaultDate, editableDate, onClose, o
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!clientName.trim()) return;
-    setError('');
-
+  async function checkConflictAndCreate() {
     try {
       const existing = await appointmentsApi.listAppointments({ date });
       if (existing.some((a) => a.time === time)) {
@@ -43,6 +40,24 @@ export default function AppointmentModal({ defaultDate, editableDate, onClose, o
     }
 
     await create();
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!clientName.trim()) return;
+    setError('');
+
+    if (isPastAppointment(date, time, new Date())) {
+      setShowPastWarning(true);
+      return;
+    }
+
+    await checkConflictAndCreate();
+  }
+
+  async function confirmPastAnyway() {
+    setShowPastWarning(false);
+    await checkConflictAndCreate();
   }
 
   async function confirmAnyway() {
@@ -91,6 +106,13 @@ export default function AppointmentModal({ defaultDate, editableDate, onClose, o
             <button type="submit" disabled={saving}>
               Guardar
             </button>
+            {showPastWarning && (
+              <ConflictConfirm
+                message="Esta cita es en una fecha u hora que ya ha pasado. ¿Quieres guardarla igualmente?"
+                onConfirm={confirmPastAnyway}
+                onDismiss={() => setShowPastWarning(false)}
+              />
+            )}
             {showConflict && (
               <ConflictConfirm
                 message="Ya hay una cita a esa hora. ¿Quieres reservar igualmente?"
