@@ -9,3 +9,9 @@ export function deleteBusiness(id, confirmName) {
     .delete(`/admin/businesses/${id}`, { data: { confirmName } })
     .then((res) => res.data);
 }
+
+export function resetUserPassword(userId, newPassword) {
+  return client
+    .patch(`/admin/users/${userId}/password`, { newPassword })
+    .then((res) => res.data);
+}

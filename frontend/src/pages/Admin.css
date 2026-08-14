@@ -58,6 +58,22 @@
   white-space: nowrap;
 }
 
+.admin-user-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.admin-user-row:not(:last-child) {
+  margin-bottom: 0.25rem;
+}
+
+.admin-reset-btn {
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+}
+
 .admin-stats {
   display: flex;
   gap: 10px;

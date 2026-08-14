@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import * as adminApi from '../api/admin';
 import * as authApi from '../api/auth';
 import DeleteBusinessDialog from '../components/DeleteBusinessDialog';
+import ResetPasswordDialog from '../components/ResetPasswordDialog';
 import { formatShortDate } from '../utils/date';
 import './Admin.css';
 
@@ -18,6 +19,7 @@ export default function AdminPage() {
   const [session, setSession] = useState(null);
   const [query, setQuery] = useState('');
   const [toDelete, setToDelete] = useState(null);
+  const [toReset, setToReset] = useState(null);
   const [notice, setNotice] = useState('');
 
   useEffect(() => {
@@ -56,6 +58,11 @@ export default function AdminPage() {
     setNotice(
       `Se eliminó "${deleted.name}" (${deleted.appointments} cita(s), ${deleted.users} usuario(s)).`
     );
+  }
+
+  function handlePasswordReset(user) {
+    setToReset(null);
+    setNotice(`Contraseña actualizada para ${user.email}.`);
   }
 
   if (loading) return <p>Cargando...</p>;
@@ -151,7 +158,16 @@ export default function AdminPage() {
                     <td className="admin-muted">{business.email}</td>
                     <td className="admin-muted">
                       {business.users.map((user) => (
-                        <div key={user.id}>{user.email}</div>
+                        <div className="admin-user-row" key={user.id}>
+                          <span>{user.email}</span>
+                          <button
+                            type="button"
+                            className="ghost muted admin-reset-btn"
+                            onClick={() => setToReset(user)}
+                          >
+                            Cambiar contraseña
+                          </button>
+                        </div>
                       ))}
                     </td>
                     <td className="num">{business.appointmentCount}</td>
@@ -181,6 +197,14 @@ export default function AdminPage() {
           business={toDelete}
           onClose={() => setToDelete(null)}
           onDeleted={handleDeleted}
+        />
+      )}
+
+      {toReset && (
+        <ResetPasswordDialog
+          user={toReset}
+          onClose={() => setToReset(null)}
+          onDone={handlePasswordReset}
         />
       )}
     </div>

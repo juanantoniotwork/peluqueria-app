@@ -8,6 +8,10 @@ const adminRoutes = require('./routes/admin');
 
 const app = express();
 
+// Railway/Vercel están detrás de un proxy: sin esto, express-rate-limit vería
+// siempre la IP del proxy en vez de la del cliente real.
+app.set('trust proxy', 1);
+
 app.use(cors());
 app.use(express.json());
 

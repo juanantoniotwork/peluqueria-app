@@ -1,4 +1,10 @@
+const bcrypt = require('bcryptjs');
+const { z } = require('zod');
 const prisma = require('../lib/prisma');
+
+const resetPasswordSchema = z.object({
+  newPassword: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
+});
 
 // Devuelve datos a nivel de negocio (nombre, contacto, volumen de uso).
 // No expone las citas concretas: esos son los clientes de cada peluquería.
@@ -80,4 +86,28 @@ async function deleteBusiness(req, res) {
   });
 }
 
-module.exports = { listBusinesses, deleteBusiness };
+// Establece una nueva contraseña para un usuario. Es la vía de soporte para
+// cuando un peluquero se queda fuera de su cuenta: no hay recuperación por
+// email, así que el admin puede fijarle una contraseña nueva a mano.
+async function resetUserPassword(req, res) {
+  const { id } = req.params;
+
+  const parsed = resetPasswordSchema.safeParse(req.body);
+  if (!parsed.success) {
+    return res.status(400).json({ error: 'Datos inválidos', details: parsed.error.flatten() });
+  }
+
+  const user = await prisma.user.findUnique({ where: { id } });
+  if (!user) {
+    return res.status(404).json({ error: 'Usuario no encontrado' });
+  }
+
+  const hashedPassword = await bcrypt.hash(parsed.data.newPassword, 10);
+  await prisma.user.update({ where: { id: user.id }, data: { password: hashedPassword } });
+
+  console.warn(`[admin] Contraseña restablecida para ${user.email} por el usuario ${req.user.id}`);
+
+  res.json({ email: user.email });
+}
+
+module.exports = { listBusinesses, deleteBusiness, resetUserPassword };
