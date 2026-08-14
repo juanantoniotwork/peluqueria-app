@@ -10,18 +10,24 @@ function adminEmails() {
     .filter(Boolean);
 }
 
-async function adminMiddleware(req, res, next) {
-  const allowed = adminEmails();
-  if (allowed.length === 0) {
-    return res.status(403).json({ error: 'Acceso no autorizado' });
-  }
+function isAdminEmail(email) {
+  if (!email) return false;
+  return adminEmails().includes(email.trim().toLowerCase());
+}
 
+// Cuántos administradores hay configurados. Se usa solo para diagnóstico:
+// nunca se exponen los emails concretos.
+function adminCount() {
+  return adminEmails().length;
+}
+
+async function adminMiddleware(req, res, next) {
   const user = await prisma.user.findUnique({
     where: { id: req.user.id },
     select: { email: true },
   });
 
-  if (!user || !allowed.includes(user.email.toLowerCase())) {
+  if (!user || !isAdminEmail(user.email)) {
     return res.status(403).json({ error: 'Acceso no autorizado' });
   }
 
@@ -29,3 +35,5 @@ async function adminMiddleware(req, res, next) {
 }
 
 module.exports = adminMiddleware;
+module.exports.isAdminEmail = isAdminEmail;
+module.exports.adminCount = adminCount;

@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const { z } = require('zod');
 const prisma = require('../lib/prisma');
 const { signToken } = require('../utils/jwt');
+const { isAdminEmail, adminCount } = require('../middleware/adminAuth');
 
 const registerSchema = z.object({
   businessName: z.string().min(2),
@@ -95,4 +96,25 @@ async function login(req, res) {
   });
 }
 
-module.exports = { register, login };
+// Datos de la sesión actual. Sirve para que el frontend sepa con qué cuenta
+// está entrando realmente y si tiene acceso al panel de administración.
+// Solo devuelve información del propio usuario autenticado.
+async function me(req, res) {
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+    include: { business: true },
+  });
+
+  if (!user) {
+    return res.status(404).json({ error: 'Usuario no encontrado' });
+  }
+
+  return res.json({
+    user: { id: user.id, email: user.email, name: user.name },
+    business: { id: user.business.id, name: user.business.name, email: user.business.email },
+    isAdmin: isAdminEmail(user.email),
+    adminConfigured: adminCount() > 0,
+  });
+}
+
+module.exports = { register, login, me };

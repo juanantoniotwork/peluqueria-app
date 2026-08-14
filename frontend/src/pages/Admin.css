@@ -3,6 +3,61 @@
   max-width: 100%;
 }
 
+.admin-denied-info {
+  margin: 1.5rem auto 0;
+  max-width: 420px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  font-size: 0.85rem;
+}
+
+.admin-denied-info p {
+  margin: 0;
+}
+
+.admin-denied-info .admin-denied-hint {
+  margin-top: 0.4rem;
+  color: var(--color-text-muted);
+}
+
+.admin-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--color-primary-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin: 0 0 1.25rem;
+  font-size: 0.85rem;
+}
+
+.admin-notice button {
+  flex-shrink: 0;
+}
+
+.admin-own-tag {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: var(--color-primary-subtle);
+  color: var(--color-primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  vertical-align: middle;
+}
+
+.admin-delete-btn {
+  color: var(--color-danger);
+  white-space: nowrap;
+}
+
 .admin-stats {
   display: flex;
   gap: 10px;
@@ -89,6 +144,29 @@
 .admin-muted {
   color: var(--color-text-muted);
   white-space: nowrap;
+}
+
+.delete-warning {
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
+}
+
+.delete-consequences {
+  margin: 0 0 0.75rem;
+  padding-left: 1.1rem;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.delete-consequences li + li {
+  margin-top: 0.2rem;
+}
+
+.delete-irreversible {
+  margin: 0 0 1.1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-danger);
 }
 
 @media (max-width: 640px) {

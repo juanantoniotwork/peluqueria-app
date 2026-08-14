@@ -7,3 +7,7 @@ export function register(data) {
 export function login(data) {
   return client.post('/auth/login', data).then((res) => res.data);
 }
+
+export function me() {
+  return client.get('/auth/me').then((res) => res.data);
+}

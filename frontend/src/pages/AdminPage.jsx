@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import * as adminApi from '../api/admin';
+import * as authApi from '../api/auth';
+import DeleteBusinessDialog from '../components/DeleteBusinessDialog';
 import { formatShortDate } from '../utils/date';
 import './Admin.css';
 
@@ -13,9 +15,16 @@ export default function AdminPage() {
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [denied, setDenied] = useState(false);
+  const [session, setSession] = useState(null);
   const [query, setQuery] = useState('');
+  const [toDelete, setToDelete] = useState(null);
+  const [notice, setNotice] = useState('');
 
   useEffect(() => {
+    // La sesión se usa para dos cosas: si deniegan el acceso, mostrar con qué
+    // cuenta se está entrando; y si lo permiten, marcar el negocio propio.
+    authApi.me().then(setSession).catch(() => {});
+
     adminApi
       .listBusinesses()
       .then(setBusinesses)
@@ -41,6 +50,14 @@ export default function AdminPage() {
     [businesses]
   );
 
+  function handleDeleted(deleted) {
+    setBusinesses((list) => list.filter((b) => b.id !== deleted.id));
+    setToDelete(null);
+    setNotice(
+      `Se eliminó "${deleted.name}" (${deleted.appointments} cita(s), ${deleted.users} usuario(s)).`
+    );
+  }
+
   if (loading) return <p>Cargando...</p>;
 
   if (denied) {
@@ -48,6 +65,18 @@ export default function AdminPage() {
       <div className="empty-state">
         <div className="empty-title">Acceso no autorizado</div>
         <div className="empty-subtitle">Esta sección no está disponible para tu cuenta.</div>
+        {session && (
+          <div className="admin-denied-info">
+            <p>
+              Estás conectado como <b>{session.user.email}</b>
+            </p>
+            <p className="admin-denied-hint">
+              {session.adminConfigured
+                ? 'Ese email no está en la lista de administradores.'
+                : 'No hay ningún administrador configurado en el servidor.'}
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -82,6 +111,15 @@ export default function AdminPage() {
         </div>
       </div>
 
+      {notice && (
+        <p className="admin-notice">
+          {notice}
+          <button type="button" className="ghost muted" onClick={() => setNotice('')}>
+            Cerrar
+          </button>
+        </p>
+      )}
+
       {filtered.length === 0 ? (
         <p className="empty-state">
           <span className="empty-subtitle">Ningún negocio coincide con el filtro.</span>
@@ -97,26 +135,53 @@ export default function AdminPage() {
                 <th className="num">Citas</th>
                 <th>Alta</th>
                 <th>Última actividad</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((business) => (
-                <tr key={business.id}>
-                  <td className="admin-name">{business.name}</td>
-                  <td className="admin-muted">{business.email}</td>
-                  <td className="admin-muted">
-                    {business.users.map((user) => (
-                      <div key={user.id}>{user.email}</div>
-                    ))}
-                  </td>
-                  <td className="num">{business.appointmentCount}</td>
-                  <td className="admin-muted">{formatDate(business.createdAt)}</td>
-                  <td className="admin-muted">{formatDate(business.lastActivityAt)}</td>
-                </tr>
-              ))}
+              {filtered.map((business) => {
+                const isOwn = session?.business?.id === business.id;
+
+                return (
+                  <tr key={business.id}>
+                    <td className="admin-name">
+                      {business.name}
+                      {isOwn && <span className="admin-own-tag">tu negocio</span>}
+                    </td>
+                    <td className="admin-muted">{business.email}</td>
+                    <td className="admin-muted">
+                      {business.users.map((user) => (
+                        <div key={user.id}>{user.email}</div>
+                      ))}
+                    </td>
+                    <td className="num">{business.appointmentCount}</td>
+                    <td className="admin-muted">{formatDate(business.createdAt)}</td>
+                    <td className="admin-muted">{formatDate(business.lastActivityAt)}</td>
+                    <td>
+                      {!isOwn && (
+                        <button
+                          type="button"
+                          className="ghost muted admin-delete-btn"
+                          onClick={() => setToDelete(business)}
+                        >
+                          Eliminar
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
+      )}
+
+      {toDelete && (
+        <DeleteBusinessDialog
+          business={toDelete}
+          onClose={() => setToDelete(null)}
+          onDeleted={handleDeleted}
+        />
       )}
     </div>
   );
