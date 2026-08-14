@@ -12,6 +12,7 @@ export default function RegisterPage() {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -23,9 +24,16 @@ export default function RegisterPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+
+    if (form.password !== form.confirmPassword) {
+      setError('Las contraseñas no coinciden');
+      return;
+    }
+
     setLoading(true);
     try {
-      await register(form);
+      const { confirmPassword, ...payload } = form;
+      await register(payload);
       navigate('/agenda');
     } catch (err) {
       setError(err.response?.data?.error || 'No se pudo completar el registro');
@@ -69,6 +77,17 @@ export default function RegisterPage() {
               type="password"
               value={form.password}
               onChange={update('password')}
+              minLength={6}
+              required
+            />
+          </div>
+          <div className="field">
+            <label htmlFor="confirmPassword">Repite la contraseña</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              value={form.confirmPassword}
+              onChange={update('confirmPassword')}
               minLength={6}
               required
             />
