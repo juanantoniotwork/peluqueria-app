@@ -1,0 +1,41 @@
+name: Backup base de datos
+
+# Copia de seguridad diaria de la base de datos de producción, además del
+# backup nativo de Railway (que conviene tener activado como primera línea
+# de defensa: ver README de este workflow más abajo). Esto es una red de
+# seguridad adicional e independiente del proveedor.
+#
+# Requiere el secret de repositorio PROD_DATABASE_URL con la cadena de
+# conexión pública de Postgres en Railway (Settings > Variables >
+# DATABASE_PUBLIC_URL, con "Public Networking" activado en el servicio).
+
+on:
+  schedule:
+    # 03:17 UTC todos los días (hora suelta para no coincidir con el pico
+    # de trabajos programados de otros repos en GitHub)
+    - cron: '17 3 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Instalar cliente de PostgreSQL
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
+      - name: Volcar base de datos
+        env:
+          DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "Falta el secret PROD_DATABASE_URL. Añádelo en Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          pg_dump "$DATABASE_URL" --no-owner --no-privileges | gzip > backup.sql.gz
+
+      - name: Subir copia como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-${{ github.run_id }}
+          path: backup.sql.gz
+          retention-days: 30
