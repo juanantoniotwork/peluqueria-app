@@ -1,5 +1,8 @@
 require('dotenv').config();
 const app = require('./app');
+const checkSecrets = require('./utils/checkSecrets');
+
+checkSecrets();
 
 const PORT = process.env.PORT || 4000;
 
